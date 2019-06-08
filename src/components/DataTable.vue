@@ -1,89 +1,120 @@
 
 <template>
   <div>
-    <div>asdasasd
-      <div v-for="data in myJson" :key="data.id">{{ data }}</div>
-      <el-button @click='test()'>ddd</el-button>
-    </div>
     <el-table
-    :data="tableData"
-    style="width: 100%">
+    :data="$store.state.dataJson"
+    border
+    style="width: 100%"
+    header-row-class-name="table-header">
     <el-table-column
-      label="Date"
-      width="180">
+      label="Article title"
+      width="350"
+      >
       <template slot-scope="scope">
-        <i class="el-icon-time"></i>
-        <span style="margin-left: 10px">{{ scope.row.date }}</span>
+        <span style="margin-left: 10px">{{ scope.row.name }}</span>
       </template>
     </el-table-column>
     <el-table-column
-      label="Name"
-      width="180">
+      label="Content"
+      >
       <template slot-scope="scope">
-        <el-popover trigger="hover" placement="top">
-          <p>Name: {{ scope.row.name }}</p>
-          <p>Addr: {{ scope.row.address }}</p>
-          <div slot="reference" class="name-wrapper">
-            <el-tag size="medium">{{ scope.row.name }}</el-tag>
-          </div>
-        </el-popover>
+        <span style="margin-left: 10px">{{ scope.row.content }}</span>
       </template>
     </el-table-column>
     <el-table-column
-      label="Operations">
+      label="Comments"
+      width="100"
+      >
       <template slot-scope="scope">
+        <span style="margin-left: 10px">{{ scope.row.comments.length }}</span>
+      </template>
+    </el-table-column>
+    <el-table-column
+      label="Actions"
+      width="300"
+      class="test"
+      >
+      <template slot-scope="scope">
+
+        <Comments :comments="scope.row.comments"
+                  :article-id="scope.row.id"
+                  :dialogVisible="
+        scope.row.id == $route.params.id ? true : false">
+        </Comments>
+
         <el-button
-          size="mini"
-          @click="handleEdit(scope.$index, scope.row)">Edit</el-button>
+                  size="mini"
+                  @click="goToComments(scope.row.id)"
+                  >Comments</el-button>
+
         <el-button
           size="mini"
           type="danger"
-          @click="handleDelete(scope.$index, scope.row)">Delete</el-button>
+          @click="deleteArticle(scope.row.id)"
+          >Delete
+        </el-button>
       </template>
     </el-table-column>
   </el-table>
+  <div>{{articles}} - Articles</div>
+  <div>{{comments}} - comments</div>
   </div>
 </template>
 
 <script>
-import myJsonFile from '@/json/data.json';
-import axios from 'axios';
+import Comments from '@/components/Comments.vue';
 
 export default {
+  components: {
+    Comments,
+  },
+  props: [
+
+  ],
   data() {
     return {
-      myJson: myJsonFile,
-    //   tableData: [{
-    //       date: '2016-05-03',
-    //       name: 'Tom',
-    //       address: 'No. 189, Grove St, Los Angeles'
-    //     }, {
-    //       date: '2016-05-02',
-    //       name: 'Tom',
-    //       address: 'No. 189, Grove St, Los Angeles'
-    //     }, {
-    //       date: '2016-05-04',
-    //       name: 'Tom',
-    //       address: 'No. 189, Grove St, Los Angeles'
-    //     }, {
-    //       date: '2016-05-01',
-    //       name: 'Tom',
-    //       address: 'No. 189, Grove St, Los Angeles'
-    //     }]
+      dataJson: [],
     };
   },
+  computed: {
+    articles() {
+      return this.$store.state.dataJson.length;
+    },
+    comments() {
+      let comments = 0;
+      this.$store.state.dataJson.map((item) => {
+        comments += item.comments.length;
+        return true;
+      });
+      return comments;
+    },
+  },
+  mounted() {
+    this.$store.commit('fetchData');
+  },
   methods: {
+    deleteArticle(id) {
+      this.$store.commit('deleteArticle', id);
+    },
+    opened(id) {
+      return (this.$route.params.id === id) ? 1 : 0;
+    },
+    goToComments(articleId) {
+      this.$router.push({ path: `/datatable/article/${articleId}/comments` });
+    },
     test() {
-      // console.log(this.myJson);
-      axios.get('https://firebasestorage.googleapis.com/v0/b/test-case2-d6a9c.appspot.com/o/data.json?alt=media&token=09640b63-8bd7-428b-94cc-830d01cbbf72')
-        .then((res) => {
-          console.log(res);
-        });
+      console.log('mylog', this.$store.state.dataJson);
     },
   },
 };
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 
+.table-header {
+  color: red;
+}
+.test {
+  display: flex;
+}
 </style>
