@@ -1,11 +1,17 @@
 
 <template>
+<!-- В тз не совсем понятно, почему данные нужно получать из JSON-файла
+(что по-идее подразумевает не использование бд), и что с ними делать потом. Нужно ли перезаписывать
+данные файл и т.д. Поэтому в данный реализовано так, JSCON-файл грузится в firebase,
+далее из него с помощью axios берутся данные и производится манипулирование с данными,
+после обноваления страницы, все данные возвращаются в прежний вид.-->
   <div>
     <el-table
     :data="$store.state.dataJson"
     border
     style="width: 100%"
-    header-row-class-name="table-header">
+    header-row-class-name="table-header"
+    empty-text="empty">
     <el-table-column
       label="Article title"
       width="350"
@@ -31,7 +37,7 @@
     </el-table-column>
     <el-table-column
       label="Actions"
-      width="300"
+      width="200"
       class="test"
       >
       <template slot-scope="scope">
@@ -56,8 +62,10 @@
       </template>
     </el-table-column>
   </el-table>
-  <div>{{articles}} - Articles</div>
-  <div>{{comments}} - comments</div>
+  <div class="footer">
+    <div class="footer-articles">{{articles}} - Articles</div>
+    <div class="footer-comments">{{comments}} - comments</div>
+  </div>
   </div>
 </template>
 
@@ -110,11 +118,24 @@ export default {
 </script>
 
 <style scoped>
-
-.table-header {
-  color: red;
-}
-.test {
+.footer {
   display: flex;
+  justify-content: center;
+  margin-top: 25px;
+}
+.footer-articles {
+  border: 1px solid #EBEEF5;
+  padding: 30px;
+  font-size: 50px;
+  margin-right: 25px;
+  padding: 20px;
+  flex-grow: 1;
+}
+.footer-comments {
+  border: 1px solid #EBEEF5;
+  padding: 30px;
+  font-size: 50px;
+  padding: 20px;
+  flex-grow: 1;
 }
 </style>

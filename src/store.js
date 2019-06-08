@@ -20,14 +20,10 @@ export default new Vuex.Store({
         });
     },
     deleteArticle(state, id) {
-      console.log('Удаляем: ', id);
       // eslint-disable-next-line no-param-reassign
       state.dataJson = state.dataJson.filter(item => item.id !== id);
     },
     revomeComment(state, { articleId, commentId }) {
-      console.log('articleId', articleId);
-      console.log('commentId', commentId);
-      console.log('state.dataJson', state.dataJson[articleId]);
       // eslint-disable-next-line no-param-reassign
       // eslint-disable-next-line max-len
       state.dataJson.find(item => item.id === articleId).comments = state.dataJson.find(item => item.id === articleId).comments.filter(item => item.id !== commentId);
