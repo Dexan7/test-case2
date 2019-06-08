@@ -39,7 +39,7 @@
 export default {
   name: 'Comments',
   mounted() {
-    console.log('comment', this.comments);
+    // console.log('comment', this.comments);
   },
   props: [
     'comments',

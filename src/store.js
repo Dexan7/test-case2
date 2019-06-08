@@ -2,6 +2,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import axios from 'axios';
+import { Message } from 'element-ui';
 
 
 Vue.use(Vuex);
@@ -16,7 +17,15 @@ export default new Vuex.Store({
         // CORS - ***********, разобраться потом с этим вопросом окончательно.
         .then((res) => {
           this.state.dataJson = res.data.posts;
-          console.log('dataJson', this.state.dataJson);
+          if (res === '') {
+            Message('Данных нет. Проверьте JSON-файл');
+          }
+          // else if (!JSON.parse(res)) {
+          //   Message('Проверьте формат данныз');
+          // } / переписать, если успею
+        })
+        .catch((error) => {
+          Message(error);
         });
     },
     deleteArticle(state, id) {

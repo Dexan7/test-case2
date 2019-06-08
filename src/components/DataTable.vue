@@ -38,7 +38,6 @@
     <el-table-column
       label="Actions"
       width="200"
-      class="test"
       >
       <template slot-scope="scope">
 
